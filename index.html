@@ -18,7 +18,6 @@ Danke und Viel Spaß!
     <meta name="keywords" content="Points, Browsergame, Idle Game, Clicker Spiel, Ressourcen, Langzeitspiel, kostenlos spielen, Online Game, Strategy, M. Fenner">
     <meta name="author" content="Datenschrauber / M. Fenner">
     <meta name="robots" content="index, follow">
-    
     <link rel="canonical" href="https://fennertech.github.io/points/">
 
     <meta property="og:type" content="website">
@@ -26,15 +25,13 @@ Danke und Viel Spaß!
     <meta property="og:title" content="POINTS - Das Langzeit-Browsergame">
     <meta property="og:description" content="Starte mit Stein und arbeite dich hoch bis zu Rhodium. Hast du die Ausdauer für dieses ultimative Idle-Game? Jetzt kostenlos im Browser spielen!">
     <meta property="og:image" content="https://fennertech.github.io/points/points.jpg">
-
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://fennertech.github.io/points/">
     <meta property="twitter:title" content="POINTS - Resource Clicker">
     <meta property="twitter:description" content="Sammeln, Klicken, Optimieren. Das minimalistische Spiel für zwischendurch und für die Ewigkeit.">
     <meta property="twitter:image" content="https://fennertech.github.io/points/points.jpg">
-
     <meta name="theme-color" content="#050505">
-    
+
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -60,7 +57,7 @@ Danke und Viel Spaß!
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Vertikale Zentrierung */
+            justify-content: center; /* Vertikale Zentrierung des Spiels */
             min-height: 100vh;
             user-select: none;
             box-sizing: border-box;
@@ -125,15 +122,8 @@ Danke und Viel Spaß!
             line-height: 1.1;
         }
 
-        .score-val {
-            font-weight: 300; 
-            font-family: 'Segoe UI Light', 'Roboto Light', sans-serif;
-        }
-        .score-lbl {
-            font-weight: 900; 
-            font-family: 'Arial Black', sans-serif;
-            margin-left: 10px;
-        }
+        .score-val { font-weight: 300; font-family: 'Segoe UI Light', 'Roboto Light', sans-serif; }
+        .score-lbl { font-weight: 900; font-family: 'Arial Black', sans-serif; margin-left: 10px; }
 
         /* GRID SYSTEM */
         .box-container, .lower-grid {
@@ -145,7 +135,7 @@ Danke und Viel Spaß!
             margin-bottom: 15px;
         }
 
-        /* Basis-Box Style - KOMPAKT */
+        /* Basis-Box Style */
         .game-box, .click-container {
             background-color: rgba(20, 20, 20, 0.85);
             border: 2px solid var(--highlight-blue);
@@ -156,28 +146,14 @@ Danke und Viel Spaß!
             flex-direction: column;
             align-items: center;
             position: relative;
-            
-            /* HÖHE */
             height: 150px; 
             box-sizing: border-box;
             padding: 10px;
         }
 
-        .box-container .game-box {
-            justify-content: center;
-            cursor: help;
-        }
-        
-        .lower-grid .game-box {
-            justify-content: flex-start;
-        }
-        
-        .click-container {
-            background: none;
-            border: none;
-            box-shadow: none;
-            padding: 0;
-        }
+        .box-container .game-box { justify-content: center; cursor: help; }
+        .lower-grid .game-box { justify-content: flex-start; }
+        .click-container { background: none; border: none; box-shadow: none; padding: 0; }
 
         .box-container .game-box:hover {
             box-shadow: 0 0 20px var(--glow-blue);
@@ -185,27 +161,14 @@ Danke und Viel Spaß!
         }
 
         .resource-name {
-            color: var(--highlight-blue);
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+            color: var(--highlight-blue); font-size: 0.85rem; font-weight: bold;
+            margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1.5px;
         }
-
-        .resource-value {
-            font-size: 2rem; 
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-        }
+        .resource-value { font-size: 2rem; font-weight: 700; font-family: 'Courier New', monospace; }
 
         .detail-view {
-            font-size: 0.7rem;
-            text-align: left;
-            width: 100%;
-            color: #ccc;
-            line-height: 1.3;
-            display: none; 
+            font-size: 0.7rem; text-align: left; width: 100%;
+            color: #ccc; line-height: 1.3; display: none; 
         }
         .detail-view ul { list-style: none; padding: 0; margin: 0; }
         .detail-view li { margin-bottom: 2px; border-bottom: 1px solid #333; padding-bottom: 1px; }
@@ -213,25 +176,14 @@ Danke und Viel Spaß!
         .detail-val { color: var(--highlight-orange); float: right; font-family: 'Courier New', monospace; }
 
         .info-content, .stats-content {
-            width: 100%;
-            text-align: left;
-            font-size: 0.75rem; 
-            line-height: 1.3;
-            color: #ccc;
-            overflow: hidden; 
+            width: 100%; text-align: left; font-size: 0.75rem; 
+            line-height: 1.3; color: #ccc; overflow: hidden; 
         }
         
         .box-title {
-            color: var(--highlight-blue);
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-            border-bottom: 1px solid #444;
-            padding-bottom: 3px;
-            display: block;
-            width: 100%;
-            text-align: center;
-            font-size: 0.85rem;
+            color: var(--highlight-blue); font-weight: bold; text-transform: uppercase;
+            margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 3px;
+            display: block; width: 100%; text-align: center; font-size: 0.85rem;
         }
 
         .info-content span { color: var(--highlight-blue); font-weight: bold; }
@@ -240,19 +192,12 @@ Danke und Viel Spaß!
 
         /* Der Button */
         .click-box-btn {
-            width: 100%;
-            height: 100%; 
+            width: 100%; height: 100%; 
             background: linear-gradient(135deg, #F29F05 0%, #d68a00 100%);
-            border: 2px solid #fff;
-            border-radius: 8px;
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: #000;
-            cursor: pointer;
-            box-shadow: 0 0 25px var(--glow-orange);
-            text-transform: uppercase;
-            outline: none;
-            transition: all 0.1s;
+            border: 2px solid #fff; border-radius: 8px;
+            font-size: 1.6rem; font-weight: 900; color: #000;
+            cursor: pointer; box-shadow: 0 0 25px var(--glow-orange);
+            text-transform: uppercase; outline: none; transition: all 0.1s;
             font-family: var(--font-stack);
         }
         .click-box-btn:hover { transform: scale(1.02); box-shadow: 0 0 40px var(--glow-orange); }
@@ -264,45 +209,20 @@ Danke und Viel Spaß!
 
         /* FOOTER */
         .footer-container {
-            text-align: center;
-            width: 100%;
-            max-width: 900px;
-            padding-top: 10px;
-            border-top: 1px solid #333;
-            margin-bottom: 0;
+            text-align: center; width: 100%; max-width: 900px;
+            padding-top: 10px; border-top: 1px solid #333; margin-bottom: 0;
         }
         
-        .footer-text {
-            color: #888;
-            font-size: 0.9rem; 
-            margin-bottom: 10px;
-        }
-        
-        .footer-text a {
-            color: var(--highlight-blue);
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .footer-text { color: #888; font-size: 0.9rem; margin-bottom: 10px; }
+        .footer-text a { color: var(--highlight-blue); text-decoration: none; font-weight: bold; }
         .footer-text a:hover { color: var(--highlight-orange); text-decoration: underline; }
 
-        .footer-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
+        .footer-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
 
         .footer-btn {
-            background-color: #000;
-            border: 1px solid #555;
-            border-radius: 4px;
-            padding: 5px 12px;
-            font-family: var(--font-stack);
-            font-size: 0.75rem; 
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background-color: #000; border: 1px solid #555; border-radius: 4px;
+            padding: 5px 12px; font-family: var(--font-stack); font-size: 0.75rem; 
+            cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
         }
         .footer-btn:hover { border-color: #fff; background-color: #111; }
 
@@ -313,17 +233,10 @@ Danke und Viel Spaß!
 
         /* Besucherzähler */
         #visitor-counter {
-            width: 100%;
-            text-align: center;
-            color: #888 !important; 
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            font-family: var(--font-stack);
+            width: 100%; text-align: center; color: #888 !important; 
+            font-size: 0.8rem; margin-bottom: 10px; font-family: var(--font-stack);
         }
-        #visitor-counter span {
-            color: #888 !important; 
-            font-weight: normal;
-        }
+        #visitor-counter span { color: #888 !important; font-weight: normal; }
         #visitor-counter a { color: #888 !important; text-decoration: none; }
 
         /* Responsive Design */
@@ -339,7 +252,7 @@ Danke und Viel Spaß!
             .lower-grid > .click-container { grid-column: auto; }
         }
 
-        /* Overlays */
+        /* Generelle Overlay Styles (z.B. Impressum, Offline) */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); display: flex;
@@ -348,12 +261,9 @@ Danke und Viel Spaß!
         
         .modal-box {
             border: 2px solid var(--highlight-orange); padding: 30px;
-            background: #111; text-align: center; 
-            max-width: 500px; width: 90%;
-            max-height: 80vh; 
-            overflow-y: auto; 
-            border-radius: 10px; box-shadow: 0 0 50px var(--glow-orange);
-            color: #ccc;
+            background: #111; text-align: center; max-width: 500px; width: 90%;
+            max-height: 80vh; overflow-y: auto; border-radius: 10px; 
+            box-shadow: 0 0 50px var(--glow-orange); color: #ccc;
         }
         .modal-box::-webkit-scrollbar { width: 6px; }
         .modal-box::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
@@ -363,15 +273,12 @@ Danke und Viel Spaß!
             border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; font-size: 1.5rem;
         }
         .modal-box p { margin-bottom: 15px; line-height: 1.5; font-size: 0.95rem; text-align: left; }
-        
-        /* Überschriften im Impressum */
         .modal-box h3 { color: var(--highlight-orange); margin-top: 0; margin-bottom: 15px; text-align: left;}
         
+        /* Zentrierung für kurze Texte */
         #offline-modal .modal-box p { text-align: center; } 
-        #cookie-overlay .modal-box p { text-align: center; }
 
         .modal-box .highlight-val { color: var(--highlight-orange); font-weight: bold; font-family: 'Courier New', monospace; font-size: 1.1rem; }
-        
         .orange-val { color: var(--highlight-orange) !important; font-weight: bold; font-family: 'Courier New', monospace;}
 
         .btn-small, .nav-btn {
@@ -380,6 +287,30 @@ Danke und Viel Spaß!
             font-size: 0.9rem; transition: background 0.3s;
         }
         .btn-small:hover, .nav-btn:hover { background: var(--highlight-orange); }
+
+        /* --- SPEZIAL-STYLE FÜR COOKIE BANNER (UNTEN) --- */
+        #cookie-overlay {
+            align-items: flex-end; /* Schiebt Inhalt nach unten */
+            background: rgba(0, 0, 0, 0.4); /* Hintergrund leicht */
+            padding: 0;
+        }
+
+        #cookie-overlay .modal-box {
+            width: 100%; max-width: 100%;
+            border-radius: 0; border: none;
+            border-top: 2px solid var(--highlight-orange);
+            background: #111; margin: 0; padding: 20px;
+            display: flex; flex-direction: row;
+            justify-content: center; align-items: center;
+            gap: 30px; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+
+        #cookie-overlay p { margin: 0; text-align: left; }
+
+        @media (max-width: 600px) {
+            #cookie-overlay .modal-box { flex-direction: column; gap: 15px; padding: 20px; }
+            #cookie-overlay p { text-align: center; }
+        }
 
         /* Münzen */
         .coin {
