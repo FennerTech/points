@@ -1,0 +1,554 @@
+<!-- -----------------------------------------------
+Points
+(c) 2026 Marco Fenner
+
+Urheberrechtlich geschützt.
+Kopieren erlaubt.
+Verändern nur mit Namensnennung des Autors ;-)
+Danke und Viel Spaß!
+------------------------------------------------ -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Points - Das Langzeit Idle Browsergame</title>
+    <meta name="description" content="Points ist ein fesselndes Ressourcen-Clicker-Spiel. Sammle Rohstoffe von Stein bis Rhodium, steigere deinen Multiplikator und spiele über Jahre hinweg. Kostenlos & ohne Download!">
+    <meta name="keywords" content="Points, Browsergame, Idle Game, Clicker Spiel, Ressourcen, Langzeitspiel, kostenlos spielen, Online Game, Strategy, M. Fenner">
+    <meta name="author" content="Datenschrauber / M. Fenner">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://fennertech.github.io/points/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fennertech.github.io/points/">
+    <meta property="og:title" content="POINTS - Das Langzeit-Browsergame">
+    <meta property="og:description" content="Starte mit Stein und arbeite dich hoch bis zu Rhodium. Hast du die Ausdauer für dieses ultimative Idle-Game? Jetzt kostenlos im Browser spielen!">
+    <meta property="og:image" content="https://fennertech.github.io/points/points.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://fennertech.github.io/points/">
+    <meta property="twitter:title" content="POINTS - Resource Clicker">
+    <meta property="twitter:description" content="Sammeln, Klicken, Optimieren. Das minimalistische Spiel für zwischendurch und für die Ewigkeit.">
+    <meta property="twitter:image" content="https://fennertech.github.io/points/points.jpg">
+
+    <meta name="theme-color" content="#050505">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <style>
+        :root {
+            --main-bg: #050505;
+            --highlight-orange: #F29F05;
+            --highlight-blue: #5D8AC5;
+            --glow-blue: rgba(93, 138, 197, 0.3);
+            --glow-orange: rgba(242, 159, 5, 0.4);
+            --rare-glow: rgba(255, 215, 0, 0.8);
+            --font-stack: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            color: var(--highlight-orange);
+            font-family: var(--font-stack);
+            margin: 0;
+            padding: 5px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Vertikale Zentrierung */
+            min-height: 100vh;
+            user-select: none;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            overflow-y: hidden; 
+        }
+        
+        /* Fallback für kleine Bildschirme */
+        @media (max-height: 800px) {
+            body { overflow-y: auto; justify-content: flex-start; padding-top: 20px; }
+        }
+
+        /* Scrollbalken styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--highlight-orange); }
+
+        #lang-switch {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid var(--highlight-blue);
+            color: var(--highlight-blue);
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: var(--font-stack);
+            z-index: 100;
+        }
+        #lang-switch:hover {
+            background: var(--highlight-blue);
+            color: #000;
+            box-shadow: 0 0 10px var(--glow-blue);
+        }
+
+        /* Header Bereich */
+        #total-score-container {
+            text-align: center;
+            margin-bottom: 10px;
+            margin-top: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        #total-score {
+            font-size: 3rem; 
+            margin: 0;
+            background: linear-gradient(to bottom, #F29F05, #d68a00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 0 15px rgba(242, 159, 5, 0.3));
+            line-height: 1.1;
+        }
+
+        .score-val {
+            font-weight: 300; 
+            font-family: 'Segoe UI Light', 'Roboto Light', sans-serif;
+        }
+        .score-lbl {
+            font-weight: 900; 
+            font-family: 'Arial Black', sans-serif;
+            margin-left: 10px;
+        }
+
+        /* GRID SYSTEM */
+        .box-container, .lower-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 15px;
+        }
+
+        /* Basis-Box Style - KOMPAKT */
+        .game-box, .click-container {
+            background-color: rgba(20, 20, 20, 0.85);
+            border: 2px solid var(--highlight-blue);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(62, 101, 160, 0.1);
+            transition: transform 0.1s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            
+            /* HÖHE */
+            height: 150px; 
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        .box-container .game-box {
+            justify-content: center;
+            cursor: help;
+        }
+        
+        .lower-grid .game-box {
+            justify-content: flex-start;
+        }
+        
+        .click-container {
+            background: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .box-container .game-box:hover {
+            box-shadow: 0 0 20px var(--glow-blue);
+            border-color: #fff;
+        }
+
+        .resource-name {
+            color: var(--highlight-blue);
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .resource-value {
+            font-size: 2rem; 
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .detail-view {
+            font-size: 0.7rem;
+            text-align: left;
+            width: 100%;
+            color: #ccc;
+            line-height: 1.3;
+            display: none; 
+        }
+        .detail-view ul { list-style: none; padding: 0; margin: 0; }
+        .detail-view li { margin-bottom: 2px; border-bottom: 1px solid #333; padding-bottom: 1px; }
+        .detail-view span { color: var(--highlight-blue); font-weight: bold; }
+        .detail-val { color: var(--highlight-orange); float: right; font-family: 'Courier New', monospace; }
+
+        .info-content, .stats-content {
+            width: 100%;
+            text-align: left;
+            font-size: 0.75rem; 
+            line-height: 1.3;
+            color: #ccc;
+            overflow: hidden; 
+        }
+        
+        .box-title {
+            color: var(--highlight-blue);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 3px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .info-content span { color: var(--highlight-blue); font-weight: bold; }
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+        .stat-val { color: var(--highlight-orange); font-weight: bold; font-family: 'Courier New', monospace; }
+
+        /* Der Button */
+        .click-box-btn {
+            width: 100%;
+            height: 100%; 
+            background: linear-gradient(135deg, #F29F05 0%, #d68a00 100%);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 0 25px var(--glow-orange);
+            text-transform: uppercase;
+            outline: none;
+            transition: all 0.1s;
+            font-family: var(--font-stack);
+        }
+        .click-box-btn:hover { transform: scale(1.02); box-shadow: 0 0 40px var(--glow-orange); }
+        .click-box-btn:active { transform: scale(0.98); }
+        .click-box-btn.disabled {
+            background: #222; color: #555; border-color: #444;
+            box-shadow: none; cursor: not-allowed; transform: none;
+        }
+
+        /* FOOTER */
+        .footer-container {
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+            margin-bottom: 0;
+        }
+        
+        .footer-text {
+            color: #888;
+            font-size: 0.9rem; 
+            margin-bottom: 10px;
+        }
+        
+        .footer-text a {
+            color: var(--highlight-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer-text a:hover { color: var(--highlight-orange); text-decoration: underline; }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .footer-btn {
+            background-color: #000;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 5px 12px;
+            font-family: var(--font-stack);
+            font-size: 0.75rem; 
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .footer-btn:hover { border-color: #fff; background-color: #111; }
+
+        .btn-reset { color: #ff6666; }
+        .btn-reset:hover { box-shadow: 0 0 10px rgba(255, 102, 102, 0.3); }
+        .btn-yellow { color: #ffeebb; }
+        .btn-yellow:hover { box-shadow: 0 0 10px rgba(255, 238, 187, 0.3); }
+
+        /* Besucherzähler */
+        #visitor-counter {
+            width: 100%;
+            text-align: center;
+            color: #888 !important; 
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            font-family: var(--font-stack);
+        }
+        #visitor-counter span {
+            color: #888 !important; 
+            font-weight: normal;
+        }
+        #visitor-counter a { color: #888 !important; text-decoration: none; }
+
+        /* Responsive Design */
+        @media (max-width: 850px) {
+            body { height: auto; padding-bottom: 40px; overflow-y: auto; justify-content: flex-start; }
+            .box-container, .lower-grid { grid-template-columns: repeat(2, 1fr); }
+            .lower-grid > .click-container { grid-column: span 2; } 
+            #total-score { font-size: 2.5rem; }
+            .footer-buttons { flex-direction: row; flex-wrap: wrap; }
+        }
+        @media (max-width: 600px) {
+            .box-container, .lower-grid { grid-template-columns: 1fr; }
+            .lower-grid > .click-container { grid-column: auto; }
+        }
+
+        /* Overlays */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); display: flex;
+            justify-content: center; align-items: center; z-index: 1000; display: none;
+        }
+        
+        .modal-box {
+            border: 2px solid var(--highlight-orange); padding: 30px;
+            background: #111; text-align: center; 
+            max-width: 500px; width: 90%;
+            max-height: 80vh; 
+            overflow-y: auto; 
+            border-radius: 10px; box-shadow: 0 0 50px var(--glow-orange);
+            color: #ccc;
+        }
+        .modal-box::-webkit-scrollbar { width: 6px; }
+        .modal-box::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+        .modal-box h2 {
+            color: var(--highlight-blue); text-transform: uppercase; margin-top: 0;
+            border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; font-size: 1.5rem;
+        }
+        .modal-box p { margin-bottom: 15px; line-height: 1.5; font-size: 0.95rem; text-align: left; }
+        
+        /* Überschriften im Impressum */
+        .modal-box h3 { color: var(--highlight-orange); margin-top: 0; margin-bottom: 15px; text-align: left;}
+        
+        #offline-modal .modal-box p { text-align: center; } 
+        #cookie-overlay .modal-box p { text-align: center; }
+
+        .modal-box .highlight-val { color: var(--highlight-orange); font-weight: bold; font-family: 'Courier New', monospace; font-size: 1.1rem; }
+        
+        .orange-val { color: var(--highlight-orange) !important; font-weight: bold; font-family: 'Courier New', monospace;}
+
+        .btn-small, .nav-btn {
+            background: var(--highlight-blue); color: #000; border: none;
+            padding: 8px 20px; font-weight: bold; cursor: pointer; border-radius: 4px;
+            font-size: 0.9rem; transition: background 0.3s;
+        }
+        .btn-small:hover, .nav-btn:hover { background: var(--highlight-orange); }
+
+        /* Münzen */
+        .coin {
+            position: absolute; width: 50px; height: 50px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+            border-radius: 50%; border: 2px solid #fff;
+            display: flex; justify-content: center; align-items: center;
+            color: #4a3b00; font-weight: 900; font-size: 1rem;
+            cursor: pointer; box-shadow: 0 0 20px #ffd700; z-index: 500;
+            user-select: none;
+        }
+        .coin.rare {
+            background: radial-gradient(circle at 30% 30%, #ffd700, #DAA520);
+            border: 4px double #fff; width: 60px; height: 60px;
+            font-size: 1.2rem; color: #fff; text-shadow: 0 0 5px #000;
+            box-shadow: 0 0 30px var(--rare-glow), 0 0 10px #fff inset;
+            animation: pulseRare 2s infinite;
+        }
+        @keyframes pulseRare {
+            0% { transform: scale(1); box-shadow: 0 0 30px var(--rare-glow); }
+            50% { transform: scale(1.05); box-shadow: 0 0 50px var(--rare-glow); }
+            100% { transform: scale(1); box-shadow: 0 0 30px var(--rare-glow); }
+        }
+        .coin-vanish { animation: vanishEffect 0.5s forwards; }
+        @keyframes vanishEffect { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <script language="JavaScript" src="https://www.besucherzaehler-kostenlos.de/js/counter.js.php?count=1&id=fennertech.github.iopoints&start=0&design=6"></script>
+
+    <button id="lang-switch" onclick="toggleLanguage()">EN / DE</button>
+
+    <div id="total-score-container">
+        <div id="total-score">0 POINTS</div>
+    </div>
+
+    <div class="box-container">
+        <div class="game-box" onclick="toggleBoxDetails(0)">
+            <div class="resource-name" data-i18n="stone">Stein</div>
+            <div class="resource-value" id="val-0">0</div>
+            <div class="detail-view" id="detail-0"></div>
+        </div>
+        <div class="game-box" onclick="toggleBoxDetails(1)">
+            <div class="resource-name" data-i18n="wood">Holz</div>
+            <div class="resource-value" id="val-1">0</div>
+            <div class="detail-view" id="detail-1"></div>
+        </div>
+        <div class="game-box" onclick="toggleBoxDetails(2)">
+            <div class="resource-name" data-i18n="copper">Kupfer</div>
+            <div class="resource-value" id="val-2">0</div>
+            <div class="detail-view" id="detail-2"></div>
+        </div>
+        <div class="game-box" onclick="toggleBoxDetails(3)">
+            <div class="resource-name" data-i18n="silver">Silber</div>
+            <div class="resource-value" id="val-3">0</div>
+            <div class="detail-view" id="detail-3"></div>
+        </div>
+        <div class="game-box" onclick="toggleBoxDetails(4)">
+            <div class="resource-name" data-i18n="gold">Gold</div>
+            <div class="resource-value" id="val-4">0</div>
+            <div class="detail-view" id="detail-4"></div>
+        </div>
+        <div class="game-box" onclick="toggleBoxDetails(5)">
+            <div class="resource-name" data-i18n="rhodium">Rhodium</div>
+            <div class="resource-value" id="val-5">0</div>
+            <div class="detail-view" id="detail-5"></div>
+        </div>
+    </div>
+
+    <div class="lower-grid">
+        <div class="game-box" style="align-items: flex-start; cursor: default;">
+            <div class="box-title" data-i18n="titleInfo">SPIELREGELN</div>
+            <div class="info-content" id="info-text"></div>
+        </div>
+
+        <div class="game-box" style="align-items: flex-start; cursor: default;">
+            <div class="box-title" data-i18n="titleStats">STATISTIK</div>
+            <div class="stats-content">
+                <div class="stat-row"><span data-i18n="statClicks">Klicks:</span> <span class="stat-val" id="s-clicks">0</span></div>
+                <div class="stat-row"><span data-i18n="statMouse">Mausstrecke:</span> <span class="stat-val" id="s-dist">0 m</span></div>
+                <div class="stat-row"><span data-i18n="statActive">Zeit (Aktiv):</span> <span class="stat-val" id="s-active">00:00:00</span></div>
+                <div class="stat-row"><span data-i18n="statOffline">Zeit (Offline):</span> <span class="stat-val" id="s-offline">00:00:00</span></div>
+                <div class="stat-row"><span data-i18n="statCoins">Münzen:</span> <span class="stat-val" id="s-coins">0</span></div>
+            </div>
+        </div>
+
+        <div class="click-container">
+            <button id="click-btn" class="click-box-btn" onclick="manualClick()" data-i18n="clickBtn">KLICK!</button>
+        </div>
+    </div>
+
+    <div class="footer-container">
+        <div id="footer-text" class="footer-text">
+            </div>
+        <div class="footer-buttons">
+            <button class="footer-btn btn-reset" onclick="resetGame()" data-i18n="btnReset">Zurücksetzen</button>
+            <button class="footer-btn btn-yellow" onclick="openYouTube()" data-i18n="btnYouTube">YouTube</button>
+            <button class="footer-btn btn-yellow" onclick="openImpressum()" data-i18n="btnImpressum">Impressum</button>
+        </div>
+        <div id="visitor-counter">
+            <span class="BZgesamt"></span> <span id="counter-text">Spieler seit dem</span> <span class="BZseit"></span>
+        </div>
+    </div>
+
+    <div id="cookie-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <p id="cookie-text">Wir speichern deinen Fortschritt lokal auf diesem Gerät.</p>
+            <button class="btn-small" onclick="acceptCookies()" id="cookie-btn">Alles klar</button>
+        </div>
+    </div>
+
+    <div id="offline-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 data-i18n="modalWelcomeBack">Willkommen zurück!</h2>
+            <p>
+                <span data-i18n="modalOfflineTime">Du warst weg für:</span><br>
+                <span id="modal-time-val" class="highlight-val">00:00:00</span>
+            </p>
+            <p>
+                <span data-i18n="modalOfflineEarned">In dieser Zeit gesammelt:</span><br>
+                <span id="modal-points-val" class="highlight-val">0</span> <span data-i18n="modalPoints">Punkte</span>
+            </p>
+            <button class="btn-small" onclick="closeOfflineModal()" data-i18n="modalClose">Super!</button>
+        </div>
+    </div>
+
+    <div id="impressum-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Informationen zu dieser Website / Impressum</h3>
+            <p><strong>Angaben gemäß § 5 TMG</strong></p>
+            <p><strong>Betreiber der Website:</strong><br>
+            Marco Fenner<br>
+            Wiardastraße 19<br>
+            26603 Aurich<br>
+            Deutschland</p>
+            <p><strong>Kontakt:</strong><br>
+            E-Mail: datenschrauber(at)gmail.com<br>
+            Telefon: +49 1573 004 2105</p>
+            <p>Vielen Dank für den Besuch meiner Website. Wenn Sie Ihnen gefallen hat, würde ich mich über eine kurze Nachricht sehr freuen. 😊</p>
+            <hr>
+            <p><strong>Haftungsausschluss:</strong></p>
+            <p><strong>Haftung für Inhalte</strong><br>
+            Als Diensteanbieter bin ich gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werde ich diese Inhalte umgehend entfernen.</p>
+            <p><strong>Haftung für Links</strong><br>
+            Mein Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links umgehend entfernen.</p>
+            <p><strong>Urheberrecht</strong><br>
+            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitte ich um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werde ich diese Inhalte umgehend entfernen.</p>
+            <hr>
+            <p><strong>Datenschutz:</strong></p>
+            <p>Die Nutzung meiner Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben. Ich weise darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.</p>
+            <p><strong>Besucherzähler von <a href="https://www.besucherzaehler-kostenlos.de" target="_blank">besucherzaehler-kostenlos.de</a></strong><br>
+            Diese Webseite verwendet einen externen Zähler, um die Anzahl der Webseitenaufrufe zu erfassen. Dafür wird ein Java-Script von einer externe Webseite geladen. Der Server von besucherzaehler-kostenlos.de speichert die IP-Adresse des Zugriffs anonymisiert und zeitlich begrenzt in einer LOG-Datei ab. Diese wird regelmäßig unwiderruflich gelöscht.</p>
+            <p>Um die korrekte Funktionsweise des Zählers zu gewährleisten, speichert der Besucherzähler zudem einen sogenannten Session-Cookie auf dem Computer des Besuchers ab. Dieser wird in der Regel vom Browser gelöscht, sobald er geschlossen wird. In diesem Cookie werden keine persönlichen Informationen gespeichert. Er enthält lediglich die Information der aufgerufenen Domain, sowie einen boolschen Tag (true/false), um den Besucher als bereits gezählt zu markieren.</p>
+            <p>Es werden auch darüberhinaus keine persönlichen oder personenbezogenen Daten vom Besucherzähler erhoben. Eine Nachverfolgung oder Zuordnung der Zugriffe ist zu keiner Zeit möglich. Ein besonderer Dank geht an <a href="https://www.urlaubsziel.info" target="_blank">urlaubsziel.info</a>, durch dessen Unterstützung dieser kostenlose Service erst möglich gemacht wird.</p>
+            <hr>
+            <p><strong>Einsehbarkeit des Quellcodes:</strong><br>
+            Der Quellcode dieser Seite ist vollständig für jedermann einsehbar.</p>
+            <p>
+                Besucher seit (Datum): <span class="BZseit orange-val"></span><br>
+                Aktuell online: <span class="BZonline orange-val"></span><br>
+                Besucher heute: <span class="BZheute orange-val"></span><br>
+                Besucher gestern: <span class="BZgestern orange-val"></span><br>
+                Besucher gesamt: <span class="BZgesamt orange-val"></span>
+            </p>
+            
+            <button class="nav-btn" onclick="closeImpressum()" style="width: 100%; margin-top: 10px;">Schließen</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
